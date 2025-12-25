@@ -1,0 +1,14 @@
+apiVersion: v2
+name: repo-analyzer
+description: AI-Powered GitHub Repository Analyzer
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - ai
+  - llm
+  - github
+  - analyzer
+maintainers:
+  - name: DevOps Team
+    email: devops@example.com

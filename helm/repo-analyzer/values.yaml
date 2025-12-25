@@ -1,0 +1,100 @@
+replicaCount:
+  backend: 2
+  frontend: 2
+
+image:
+  backend:
+    repository: repo-analyzer-backend
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  frontend:
+    repository: repo-analyzer-frontend
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+service:
+  type: ClusterIP
+  backend:
+    port: 8000
+  frontend:
+    port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: repo-analyzer.example.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          backend: backend
+        - path: /
+          pathType: Prefix
+          backend: frontend
+  tls:
+    - secretName: repo-analyzer-tls
+      hosts:
+        - repo-analyzer.example.com
+
+resources:
+  backend:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  frontend:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+autoscaling:
+  backend:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  frontend:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+postgresql:
+  enabled: true
+  auth:
+    username: analyzer
+    password: analyzer123
+    database: repo_analyzer
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
+
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+qdrant:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 20Gi
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true

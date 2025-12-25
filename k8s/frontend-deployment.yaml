@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: autodeployx-frontend
+  namespace: autodeployx
+  labels:
+    app: autodeployx
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autodeployx
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: autodeployx
+        tier: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: ghcr.io/example/autodeployx-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: VITE_API_URL
+              value: https://autodeployx.example.com/api
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: autodeployx-frontend
+  namespace: autodeployx
+spec:
+  selector:
+    app: autodeployx
+    tier: frontend
+  ports:
+    - port: 3000
+      targetPort: http
+      name: http
+

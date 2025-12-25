@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: autodeployx-ingress
+  namespace: autodeployx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+    - host: autodeployx.local
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: autodeployx-backend
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: autodeployx-frontend
+                port:
+                  number: 3000
+

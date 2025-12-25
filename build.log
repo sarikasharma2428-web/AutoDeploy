@@ -1,0 +1,42 @@
+Judge Demo Script: Autonomous SRE Agent
+Pre-Demo Checklist
+ Backend running (python main.py)
+ Frontend running (npm run dev)
+ Kestra flows imported
+ Vercel deployment ready (if applicable)
+Demo Flow (2-3 Minutes)
+1. Introduction (0:00-0:30)
+
+"Hi, I'm presenting KOV Guardian, an autonomous SRE agent that combines Kestra, Cline, and Oumi."
+Show: Open Dashboard at http://localhost:3000. Point out "System Healthy" status.
+2. The Incident (0:30-1:00)
+
+"I will simulate a critical incident: auth-service crash."
+Action: Open Restricted Terminal in UI.
+Type: kubectl scale deployment auth-service --replicas=0 (Mock this via backend if needed or just explain).
+Show: Dashboard Metrics turn RED.
+3. Autonomous Detection & Decision (1:00-1:45)
+
+"Kestra detects this via the 
+health_check
+ workflow."
+Show: Switch to Kestra UI (or show logs on dashboard).
+"The Decision Router sends logs to Oumi."
+Show: JSON on screen:
+{ "action": "restart_pod", "reason": "No healthy pods found", "confidence": 0.95 }
+4. Remediation (1:45-2:15)
+
+"Kestra triggers the remediation workflow automatically."
+Show: Terminal output: Executing safe restart for auth-service...
+Result: Dashboard turns GREEN.
+5. Dev Workflow (Awards)
+
+Cline: "We built this using Cline." (Show 
+.github/workflows/cline-responder.yml
+).
+CodeRabbit: "Every PR is checked automatically." (Show 
+coderabbit.yaml
+).
+6. Conclusion
+
+"We successfully detected, analyzed, and fixed an outage with zero human intervention."

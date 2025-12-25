@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: autodeployx-config
+  namespace: autodeployx
+data:
+  APP_NAME: AutoDeployX API
+  QDRANT_HOST: qdrant
+  QDRANT_PORT: "6333"
+  PROMETHEUS_METRICS_PATH: /metrics
+  CORS_ORIGINS: https://autodeployx.local,http://localhost:3000
+
